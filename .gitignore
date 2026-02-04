@@ -15,7 +15,8 @@
 
 # next.js
 /.next/
-/out/
+# /out/
+# docs/ is used for GitHub Pages deployment
 
 # production
 /build
