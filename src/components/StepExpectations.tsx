@@ -5,7 +5,7 @@ interface Props {
     update: (data: any) => void;
 }
 
-export default function StepSports({ data, update }: Props) {
+export default function StepExpectations({ data, update }: Props) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         update({ [e.target.name]: e.target.value });
     };
@@ -72,86 +72,90 @@ export default function StepSports({ data, update }: Props) {
 
     return (
         <div>
-            <h3 className={styles.sectionTitle}>4. Actividad Física y Estilo de Vida</h3>
+            <h3 className={styles.sectionTitle}>5. Expectativas, Logística y Motivación</h3>
 
             <div className={styles.formGroup}>
-                <label className={styles.label}>Deporte Principal que Practicas</label>
-                <input
-                    type="text"
-                    name="sport"
-                    className={styles.input}
-                    placeholder="Ej: CrossFit, Running, Gimnasio..."
-                    value={data.sport}
+                <label className={styles.label}>¿Tienes experiencia previa con planes de nutrición o entrenamiento estructurado?</label>
+                <div className="flex gap-4 mt-2 mb-2">
+                    {['yes', 'no'].map((val) => (
+                        <label key={val} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="previousExperience"
+                                value={val}
+                                checked={data.previousExperience === val}
+                                onChange={handleChange}
+                                className="w-5 h-5"
+                                style={{ accentColor: '#0056b3' }}
+                            />
+                            <span>{val === 'yes' ? 'Sí' : 'No'}</span>
+                        </label>
+                    ))}
+                </div>
+                <textarea
+                    name="experienceDetails"
+                    className={styles.textarea}
+                    placeholder="¿Cuál fue tu experiencia?"
+                    value={data.experienceDetails}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div className={styles.formGroup}>
+                <label className={styles.label}>¿Qué esperas obtener de este programa 1:1?</label>
+                <textarea
+                    name="expectations"
+                    className={styles.textarea}
+                    placeholder="Explica tus expectativas y metas específicas..."
+                    value={data.expectations}
                     onChange={handleChange}
                 />
             </div>
 
             <RadioGroup
-                label="Frecuencia de Entrenamiento Semanal"
-                name="trainingFrequency"
+                label="¿Cómo te gustaría que fuera tu seguimiento?"
+                name="followUpPreference"
                 options={[
-                    { val: '1-2', label: '1-2 días' },
-                    { val: '3-4', label: '3-4 días' },
-                    { val: '5-6', label: '5-6 días' },
-                    { val: 'everyday', label: 'Todos los días' },
+                    { val: 'strict_daily', label: 'Rigurosamente diario' },
+                    { val: 'flexible_constant', label: 'Flexible pero constante' },
+                    { val: 'key_milestones', label: 'Solo hitos clave' },
                 ]}
             />
 
             <CheckboxGroup
-                label="Tipo de Entrenamiento (puedes seleccionar varios)"
-                field="trainingTypes"
+                label="¿Cuál consideras que es tu mayor dificultad a la hora de cuidarte? (puedes seleccionar varios)"
+                field="difficulties"
                 options={[
-                    { val: 'strength', label: 'Fuerza' },
-                    { val: 'hiit', label: 'HIIT' },
-                    { val: 'cardio', label: 'Cardio' },
-                    { val: 'yoga', label: 'Yoga' },
-                    { val: 'climbing', label: 'Escalada' },
+                    { val: 'organization', label: 'Organización' },
+                    { val: 'lack_time', label: 'Falta de tiempo' },
+                    { val: 'anxiety', label: 'Ansiedad o hambre emocional' },
+                    { val: 'demotivation', label: 'Desmotivación' },
+                    { val: 'lack_knowledge', label: 'Falta de conocimientos' },
                 ]}
             />
 
             <div className={styles.formGroup}>
-                <label className={styles.label}>Otro tipo de entrenamiento</label>
+                <label className={styles.label}>Otra dificultad</label>
                 <input
                     type="text"
-                    name="otherTraining"
+                    name="otherDifficulty"
                     className={styles.input}
-                    placeholder="Especifica si hay otros tipos"
-                    value={data.otherTraining}
+                    placeholder="Especifica si hay otra dificultad"
+                    value={data.otherDifficulty}
                     onChange={handleChange}
                 />
             </div>
 
-            <RadioGroup
-                label="Nivel Actual"
-                name="experienceLevel"
-                options={[
-                    { val: 'beginner', label: 'Principiante' },
-                    { val: 'intermediate', label: 'Intermedio' },
-                    { val: 'advanced', label: 'Avanzado' },
-                    { val: 'competition', label: 'Competición' },
-                ]}
-            />
-
-            <RadioGroup
-                label="¿Entrenas en casa o en gimnasio?"
-                name="trainingLocation"
-                options={[
-                    { val: 'home', label: 'Casa' },
-                    { val: 'gym', label: 'Gimnasio' },
-                    { val: 'both', label: 'Ambos' },
-                ]}
-            />
-
             <div className={styles.formGroup}>
-                <label className={styles.label}>¿Tienes entrenador/a actualmente?</label>
+                <label className={styles.label}>¿Te gustaría incluir recomendaciones para mejorar descanso, concentración o gestión del estrés?</label>
                 <div className="flex gap-4 mt-2">
                     {['yes', 'no'].map((val) => (
                         <label key={val} className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="radio"
-                                name="hasTrainer"
+                                name="wantsStressManagement"
                                 value={val}
-                                checked={data.hasTrainer === val}
+                                checked={data.wantsStressManagement === val}
                                 onChange={handleChange}
                                 className="w-5 h-5"
                                 style={{ accentColor: '#0056b3' }}
@@ -163,47 +167,27 @@ export default function StepSports({ data, update }: Props) {
             </div>
 
             <div className={styles.formGroup}>
-                <label className={styles.label}>¿Tienes alguna lesión actual o histórica relevante?</label>
-                <textarea
-                    name="injuries"
-                    className={styles.textarea}
-                    placeholder="Indica zona, gravedad y tratamiento si aplica"
-                    value={data.injuries}
-                    onChange={handleChange}
-                />
-            </div>
-
-            <RadioGroup
-                label="¿Cómo valoras tu recuperación post-entreno?"
-                name="recovery"
-                options={[
-                    { val: 'good', label: 'Buena' },
-                    { val: 'slow', label: 'Lenta' },
-                    { val: 'very_slow', label: 'Muy lenta' },
-                ]}
-            />
-
-            <div className={styles.formGroup}>
-                <label className={styles.label}>¿Realizas alguna otra actividad física?</label>
+                <label className={styles.label}>¿Hay algún alimento o grupo que no quieras incluir bajo ningún concepto?</label>
                 <input
                     type="text"
-                    name="otherActivities"
+                    name="foodRestrictions"
                     className={styles.input}
-                    placeholder="Ej: Caminar, bailar, bici..."
-                    value={data.otherActivities}
+                    placeholder="Ej: Carne, lácteos, legumbres..."
+                    value={data.foodRestrictions}
                     onChange={handleChange}
                 />
             </div>
 
-            <RadioGroup
-                label="¿Cuánto tiempo estás sentado/a al día?"
-                name="sittingTime"
-                options={[
-                    { val: 'less_4', label: '< 4h' },
-                    { val: '4_6', label: '4-6h' },
-                    { val: 'more_6', label: '> 6h' },
-                ]}
-            />
+            <div className={styles.formGroup}>
+                <label className={styles.label}>¿Algún comentario, observación o necesidad que quieras que tenga en cuenta?</label>
+                <textarea
+                    name="additionalComments"
+                    className={styles.textarea}
+                    placeholder="Cualquier información adicional que consideres importante..."
+                    value={data.additionalComments}
+                    onChange={handleChange}
+                />
+            </div>
         </div>
     );
 }

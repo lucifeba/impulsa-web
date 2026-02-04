@@ -15,10 +15,9 @@ export default function StepPersonalData({ data, update }: Props) {
             <h3 className={styles.sectionTitle}>1. Datos Personales</h3>
 
             <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="fullName">Nombre Completo</label>
+                <label className={styles.label}>Nombre Completo</label>
                 <input
                     type="text"
-                    id="fullName"
                     name="fullName"
                     className={styles.input}
                     placeholder="Ej: Juan Pérez"
@@ -28,10 +27,9 @@ export default function StepPersonalData({ data, update }: Props) {
             </div>
 
             <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="email">Correo Electrónico</label>
+                <label className={styles.label}>Email</label>
                 <input
                     type="email"
-                    id="email"
                     name="email"
                     className={styles.input}
                     placeholder="juan@ejemplo.com"
@@ -41,10 +39,9 @@ export default function StepPersonalData({ data, update }: Props) {
             </div>
 
             <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="phone">Teléfono / WhatsApp</label>
+                <label className={styles.label}>Teléfono</label>
                 <input
                     type="tel"
-                    id="phone"
                     name="phone"
                     className={styles.input}
                     placeholder="+34 600 000 000"
@@ -55,10 +52,9 @@ export default function StepPersonalData({ data, update }: Props) {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className={styles.formGroup}>
-                    <label className={styles.label} htmlFor="age">Edad</label>
+                    <label className={styles.label}>Edad</label>
                     <input
                         type="number"
-                        id="age"
                         name="age"
                         className={styles.input}
                         value={data.age}
@@ -68,32 +64,60 @@ export default function StepPersonalData({ data, update }: Props) {
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Género</label>
                     <div className="flex flex-col gap-2 mt-2">
-                        <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors bg-white">
-                            <input
-                                type="radio"
-                                name="gender"
-                                value="male"
-                                checked={data.gender === 'male'}
-                                onChange={handleChange}
-                                className="w-5 h-5"
-                                style={{ accentColor: '#0056b3' }}
-                            />
-                            <span className="text-gray-700 font-medium">Masculino</span>
-                        </label>
-                        <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors bg-white">
-                            <input
-                                type="radio"
-                                name="gender"
-                                value="female"
-                                checked={data.gender === 'female'}
-                                onChange={handleChange}
-                                className="w-5 h-5"
-                                style={{ accentColor: '#0056b3' }}
-                            />
-                            <span className="text-gray-700 font-medium">Femenino</span>
-                        </label>
+                        {['male', 'female', 'other', 'prefer_not'].map((val) => (
+                            <label key={val} className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition-colors bg-white">
+                                <input
+                                    type="radio"
+                                    name="gender"
+                                    value={val}
+                                    checked={data.gender === val}
+                                    onChange={handleChange}
+                                    className="w-5 h-5"
+                                    style={{ accentColor: '#0056b3' }}
+                                />
+                                <span className="text-gray-700 font-medium">
+                                    {val === 'male' ? 'Hombre' : val === 'female' ? 'Mujer' : val === 'other' ? 'Otro' : 'Prefiero no decirlo'}
+                                </span>
+                            </label>
+                        ))}
                     </div>
                 </div>
+            </div>
+
+            <div className={styles.formGroup}>
+                <label className={styles.label}>País y Ciudad de Residencia</label>
+                <input
+                    type="text"
+                    name="location"
+                    className={styles.input}
+                    placeholder="Ej: España, Madrid"
+                    value={data.location}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div className={styles.formGroup}>
+                <label className={styles.label}>Profesión</label>
+                <input
+                    type="text"
+                    name="profession"
+                    className={styles.input}
+                    placeholder="Ej: Ingeniero, Profesor, etc."
+                    value={data.profession}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div className={styles.formGroup}>
+                <label className={styles.label}>Horarios Laborales Habituales</label>
+                <input
+                    type="text"
+                    name="workSchedule"
+                    className={styles.input}
+                    placeholder="Ej: 9:00 - 18:00, turnos rotativos, etc."
+                    value={data.workSchedule}
+                    onChange={handleChange}
+                />
             </div>
         </div>
     );

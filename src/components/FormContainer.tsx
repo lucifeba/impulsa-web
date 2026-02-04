@@ -8,43 +8,28 @@ import StepPersonalData from './StepPersonalData';
 import StepAnthropometry from './StepAnthropometry';
 import StepNutritional from './StepNutritional';
 import StepSports from './StepSports';
+import StepExpectations from './StepExpectations';
 
 interface FormData {
-    // Personal
-    fullName: string;
-    email: string;
-    phone: string;
-    age: string;
-    gender: string;
-
-    // Anthropometry
-    weight: string;
-    height: string;
-    bodyFat: string;
-    fastingWeight: string;
-
-    // Nutritional
-    goal: string;
-    motivation: string;
-    pathologies: string;
-    digestion: string;
-    sleep: string;
-    mealsPerDay: string;
-    cookingTime: string;
-
-    // Sports
-    sport: string;
-    trainingFrequency: string;
-    injuries: string;
-    experienceLevel: string;
+    [key: string]: string;
 }
 
 const initialData: FormData = {
-    fullName: '', email: '', phone: '', age: '', gender: '',
-    weight: '', height: '', bodyFat: '', fastingWeight: '',
-    goal: '', motivation: '', pathologies: '', digestion: '',
-    sleep: '', mealsPerDay: '', cookingTime: '',
-    sport: '', trainingFrequency: '', injuries: '', experienceLevel: ''
+    // Step 1
+    fullName: '', email: '', phone: '', age: '', gender: '', location: '', profession: '', workSchedule: '',
+    // Step 2
+    weight: '', height: '', usualWeight: '', fastingWeight: '', bodyFat: '', waist: '', hip: '',
+    pathologies: '', medications: '', allergies: '', recentAnalysis: '', menstrualCycle: '',
+    // Step 3
+    goals: '', otherGoal: '', motivation: '', dietType: '', otherDiet: '', digestiveSymptoms: '',
+    foodRelationship: '', mealsPerDay: '', mealTimes: '', sleep: '', sleepQuality: '',
+    coffee: '', coffeeDetails: '', cookingSkill: '', cookingTime: '',
+    // Step 4
+    sport: '', trainingFrequency: '', trainingTypes: '', otherTraining: '', experienceLevel: '',
+    trainingLocation: '', hasTrainer: '', injuries: '', recovery: '', otherActivities: '', sittingTime: '',
+    // Step 5
+    previousExperience: '', experienceDetails: '', expectations: '', followUpPreference: '',
+    difficulties: '', otherDifficulty: '', wantsStressManagement: '', foodRestrictions: '', additionalComments: ''
 };
 
 export default function FormContainer() {
@@ -52,10 +37,10 @@ export default function FormContainer() {
     const [formData, setFormData] = useState<FormData>(initialData);
     const [isSuccess, setIsSuccess] = useState(false);
 
-    const totalSteps = 4;
+    const totalSteps = 5;
 
     const updateData = (newData: Partial<FormData>) => {
-        setFormData(prev => ({ ...prev, ...newData }));
+        setFormData(prev => ({ ...prev, ...newData } as FormData));
     };
 
     const nextStep = () => {
@@ -70,39 +55,92 @@ export default function FormContainer() {
         setIsSuccess(true);
     };
 
+    const formatField = (value: string) => {
+        if (!value) return 'No especificado';
+        // Convert comma-separated values to readable list
+        if (value.includes(',')) {
+            return value.split(',').filter(v => v).join(', ');
+        }
+        return value;
+    };
+
     const generateMailto = () => {
-        const subject = `Nueva Encuesta IMPULSA - ${formData.fullName}`;
-        const body = `DATOS PERSONALES
-────────────────
-Nombre: ${formData.fullName}
+        const subject = `Nueva Encuesta IMPULSA 1:1 - ${formData.fullName}`;
+        const body = `FORMULARIO DE ACCESO – PROGRAMA 1:1 ENTRENAMIENTO Y NUTRICIÓN
+
+═══════════════════════════════════════════════════
+1. DATOS PERSONALES
+═══════════════════════════════════════════════════
+Nombre completo: ${formData.fullName}
 Email: ${formData.email}
 Teléfono: ${formData.phone}
 Edad: ${formData.age}
-Género: ${formData.gender}
+Género: ${formatField(formData.gender)}
+País y ciudad: ${formatField(formData.location)}
+Profesión: ${formatField(formData.profession)}
+Horarios laborales: ${formatField(formData.workSchedule)}
 
-ANTROPOMETRÍA
-─────────────
-Peso: ${formData.weight} kg
+═══════════════════════════════════════════════════
+2. PARÁMETROS ANTROPOMÉTRICOS Y SALUD
+═══════════════════════════════════════════════════
+Peso actual: ${formData.weight} kg
 Altura: ${formData.height} cm
-% Grasa: ${formData.bodyFat || 'No especificado'}
-Peso en ayunas: ${formData.fastingWeight}
+Peso habitual: ${formatField(formData.usualWeight)} kg
+Peso en ayunas: ${formatField(formData.fastingWeight)}
+% Grasa: ${formatField(formData.bodyFat)}
+Cintura: ${formatField(formData.waist)} cm
+Cadera: ${formatField(formData.hip)} cm
+Patologías: ${formatField(formData.pathologies)}
+Medicación/Suplementos: ${formatField(formData.medications)}
+Alergias: ${formatField(formData.allergies)}
+Análisis recientes: ${formatField(formData.recentAnalysis)}
+Ciclo menstrual: ${formatField(formData.menstrualCycle)}
 
-NUTRICIÓN
-─────────
-Objetivo: ${formData.goal}
-Motivación: ${formData.motivation}
-Digestión: ${formData.digestion}
-Patologías: ${formData.pathologies || 'Ninguna'}
-Comidas/día: ${formData.mealsPerDay}
-Disponibilidad cocina: ${formData.cookingTime}
-Sueño: ${formData.sleep}
+═══════════════════════════════════════════════════
+3. ENCUESTA NUTRICIONAL Y DIGESTIVA
+═══════════════════════════════════════════════════
+Objetivos: ${formatField(formData.goals)}
+Otro objetivo: ${formatField(formData.otherGoal)}
+Motivación: ${formatField(formData.motivation)}
+Tipo alimentación: ${formatField(formData.dietType)}
+Otro tipo dieta: ${formatField(formData.otherDiet)}
+Síntomas digestivos: ${formatField(formData.digestiveSymptoms)}
+Relación con comida: ${formatField(formData.foodRelationship)}
+Comidas/día: ${formatField(formData.mealsPerDay)}
+Horarios comidas: ${formatField(formData.mealTimes)}
+Horas sueño: ${formatField(formData.sleep)}
+Calidad sueño: ${formatField(formData.sleepQuality)}
+Café: ${formatField(formData.coffee)} - ${formatField(formData.coffeeDetails)}
+Facilidad cocinar: ${formatField(formData.cookingSkill)}
+Tiempo cocina: ${formatField(formData.cookingTime)}
 
-DEPORTE
-───────
-Deporte: ${formData.sport}
-Frecuencia: ${formData.trainingFrequency}
-Nivel: ${formData.experienceLevel}
-Lesiones: ${formData.injuries || 'Ninguna'}
+═══════════════════════════════════════════════════
+4. ACTIVIDAD FÍSICA Y ESTILO DE VIDA
+═══════════════════════════════════════════════════
+Deporte principal: ${formatField(formData.sport)}
+Frecuencia: ${formatField(formData.trainingFrequency)}
+Tipos entrenamiento: ${formatField(formData.trainingTypes)}
+Otro entrenamiento: ${formatField(formData.otherTraining)}
+Nivel: ${formatField(formData.experienceLevel)}
+Ubicación: ${formatField(formData.trainingLocation)}
+Tiene entrenador: ${formatField(formData.hasTrainer)}
+Lesiones: ${formatField(formData.injuries)}
+Recuperación: ${formatField(formData.recovery)}
+Otras actividades: ${formatField(formData.otherActivities)}
+Tiempo sentado: ${formatField(formData.sittingTime)}
+
+═══════════════════════════════════════════════════
+5. EXPECTATIVAS, LOGÍSTICA Y MOTIVACIÓN
+═══════════════════════════════════════════════════
+Experiencia previa: ${formatField(formData.previousExperience)}
+Detalles experiencia: ${formatField(formData.experienceDetails)}
+Expectativas: ${formatField(formData.expectations)}
+Preferencia seguimiento: ${formatField(formData.followUpPreference)}
+Dificultades: ${formatField(formData.difficulties)}
+Otra dificultad: ${formatField(formData.otherDifficulty)}
+Recomendaciones estrés: ${formatField(formData.wantsStressManagement)}
+Alimentos excluir: ${formatField(formData.foodRestrictions)}
+Comentarios adicionales: ${formatField(formData.additionalComments)}
 `;
 
         return `mailto:info@apdsport.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -112,7 +150,7 @@ Lesiones: ${formData.injuries || 'Ninguna'}
         const phone = "34676002647";
         const text = `Hola APD SPORT, soy ${formData.fullName}. 
 
-He completado el formulario IMPULSA y os he enviado toda la información por correo electrónico.
+He completado el formulario IMPULSA 1:1 y os he enviado toda la información por correo electrónico.
 
 ¡Muchas gracias! Quedo a la espera de vuestra respuesta.`;
 
@@ -135,7 +173,7 @@ He completado el formulario IMPULSA y os he enviado toda la información por cor
                     <div className="p-6 bg-gray-50 rounded-xl border">
                         <span className="block text-sm font-bold text-gray-400 mb-2" style={{ textTransform: 'uppercase', letterSpacing: '0.1em' }}>PASO 1</span>
                         <h3 className="text-lg font-bold text-gray-800 mb-2">Enviar Datos</h3>
-                        <p className="text-sm text-gray-500 mb-4">Esto abrirá tu correo para enviarnos tu ficha.</p>
+                        <p className="text-sm text-gray-500 mb-4">Esto abrirá tu correo para enviarnos tu ficha completa.</p>
                         <a
                             href={generateMailto()}
                             className="block w-full bg-gray-800 text-white font-bold rounded-lg hover:bg-black transition-colors"
@@ -175,9 +213,10 @@ He completado el formulario IMPULSA y os he enviado toda la información por cor
 
             <div className="mb-6 text-center">
                 {step === 1 && <h2 className="text-xl font-bold text-blue-900">Datos Personales</h2>}
-                {step === 2 && <h2 className="text-xl font-bold text-blue-900">Antropometría</h2>}
-                {step === 3 && <h2 className="text-xl font-bold text-blue-900">Encuesta Nutricional</h2>}
-                {step === 4 && <h2 className="text-xl font-bold text-blue-900">Encuesta Deportiva</h2>}
+                {step === 2 && <h2 className="text-xl font-bold text-blue-900">Parámetros Antropométricos y Salud</h2>}
+                {step === 3 && <h2 className="text-xl font-bold text-blue-900">Encuesta Nutricional y Digestiva</h2>}
+                {step === 4 && <h2 className="text-xl font-bold text-blue-900">Actividad Física y Estilo de Vida</h2>}
+                {step === 5 && <h2 className="text-xl font-bold text-blue-900">Expectativas, Logística y Motivación</h2>}
             </div>
 
             <div className={styles.stepContainer}>
@@ -200,6 +239,11 @@ He completado el formulario IMPULSA y os he enviado toda la información por cor
                     {step === 4 && (
                         <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                             <StepSports data={formData} update={updateData} />
+                        </motion.div>
+                    )}
+                    {step === 5 && (
+                        <motion.div key="step5" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                            <StepExpectations data={formData} update={updateData} />
                         </motion.div>
                     )}
                 </AnimatePresence>

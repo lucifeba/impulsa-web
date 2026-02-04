@@ -10,6 +10,24 @@ export default function StepNutritional({ data, update }: Props) {
         update({ [e.target.name]: e.target.value });
     };
 
+    const handleCheckboxChange = (field: string, value: string) => {
+        const current = data[field] ? data[field].split(',').filter((v: string) => v) : [];
+        const index = current.indexOf(value);
+
+        if (index > -1) {
+            current.splice(index, 1);
+        } else {
+            current.push(value);
+        }
+
+        update({ [field]: current.join(',') });
+    };
+
+    const isChecked = (field: string, value: string) => {
+        if (!data[field]) return false;
+        return data[field].split(',').includes(value);
+    };
+
     const RadioGroup = ({ label, name, options }: { label: string, name: string, options: { val: string, label: string }[] }) => (
         <div className={styles.formGroup}>
             <label className={styles.label}>{label}</label>
@@ -32,89 +50,207 @@ export default function StepNutritional({ data, update }: Props) {
         </div>
     );
 
+    const CheckboxGroup = ({ label, field, options }: { label: string, field: string, options: { val: string, label: string }[] }) => (
+        <div className={styles.formGroup}>
+            <label className={styles.label}>{label}</label>
+            <div className="grid grid-cols-2 gap-2 mt-2">
+                {options.map((opt) => (
+                    <label key={opt.val} className="flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-blue-50 transition-colors bg-white">
+                        <input
+                            type="checkbox"
+                            checked={isChecked(field, opt.val)}
+                            onChange={() => handleCheckboxChange(field, opt.val)}
+                            className="w-4 h-4"
+                            style={{ accentColor: '#0056b3' }}
+                        />
+                        <span className="text-sm text-gray-700">{opt.label}</span>
+                    </label>
+                ))}
+            </div>
+        </div>
+    );
+
     return (
         <div>
-            <h3 className={styles.sectionTitle}>3. Encuesta Nutricional</h3>
+            <h3 className={styles.sectionTitle}>3. Encuesta Nutricional y Digestiva</h3>
 
-            <RadioGroup
-                label="🎯 Objetivo Principal"
-                name="goal"
+            <CheckboxGroup
+                label="Objetivo Principal (puedes seleccionar varios)"
+                field="goals"
                 options={[
-                    { val: 'weight_loss', label: 'Pérdida de Grasa / Definición' },
-                    { val: 'muscle_gain', label: 'Ganancia de Masa Muscular' },
-                    { val: 'performance', label: 'Rendimiento Deportivo' },
-                    { val: 'health', label: 'Salud y Bienestar' }
+                    { val: 'fat_loss', label: 'Pérdida de grasa' },
+                    { val: 'muscle_gain', label: 'Ganancia muscular' },
+                    { val: 'digestive', label: 'Mejora digestiva' },
+                    { val: 'performance', label: 'Rendimiento deportivo' },
+                    { val: 'healthy_habits', label: 'Hábitos saludables' },
                 ]}
             />
 
             <div className={styles.formGroup}>
-                <label className={styles.label}>Motivación Principal</label>
+                <label className={styles.label}>Otro objetivo</label>
+                <input
+                    type="text"
+                    name="otherGoal"
+                    className={styles.input}
+                    placeholder="Especifica otro objetivo si lo hay"
+                    value={data.otherGoal}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div className={styles.formGroup}>
+                <label className={styles.label}>¿Cuál es tu motivación personal para empezar este proceso?</label>
                 <textarea
                     name="motivation"
                     className={styles.textarea}
-                    placeholder="¿Qué te impulsa a empezar?"
+                    placeholder="Explica qué te impulsa y qué quieres conseguir..."
                     value={data.motivation}
                     onChange={handleChange}
                 />
             </div>
 
-            <h4 className="font-bold text-gray-800 mt-6 mb-4 border-b pb-2">Salud Digestiva</h4>
-
             <RadioGroup
-                label="¿Cómo son tus digestiones?"
-                name="digestion"
+                label="Tipo de alimentación habitual"
+                name="dietType"
                 options={[
-                    { val: 'good', label: 'Buenas, sin molestias' },
-                    { val: 'gas', label: 'Hinchazón o Gases frecuentes' },
-                    { val: 'heavy', label: 'Pesadas / Lentas' }
+                    { val: 'omnivore', label: 'Omnívora' },
+                    { val: 'vegetarian', label: 'Vegetariana' },
+                    { val: 'vegan', label: 'Vegana' },
+                    { val: 'pescatarian', label: 'Pescetariana' },
                 ]}
             />
 
             <div className={styles.formGroup}>
-                <label className={styles.label}>Patologías o Alergias</label>
-                <textarea
-                    name="pathologies"
-                    className={styles.textarea}
-                    placeholder="Diabetes, Lactosa, Gluten..."
-                    value={data.pathologies}
+                <label className={styles.label}>Otro tipo de alimentación</label>
+                <input
+                    type="text"
+                    name="otherDiet"
+                    className={styles.input}
+                    placeholder="Ej: Cetogénica, Paleo..."
+                    value={data.otherDiet}
                     onChange={handleChange}
                 />
             </div>
 
-            <h4 className="font-bold text-gray-800 mt-6 mb-4 border-b pb-2">Hábitos</h4>
+            <CheckboxGroup
+                label="¿Sufres de alguno de los siguientes síntomas digestivos con frecuencia?"
+                field="digestiveSymptoms"
+                options={[
+                    { val: 'bloating', label: 'Hinchazón' },
+                    { val: 'gas', label: 'Gases' },
+                    { val: 'burping', label: 'Eructos' },
+                    { val: 'reflux', label: 'Reflujo' },
+                    { val: 'diarrhea', label: 'Diarrea' },
+                    { val: 'constipation', label: 'Estreñimiento' },
+                    { val: 'nausea', label: 'Náuseas' },
+                    { val: 'abdominal_pain', label: 'Dolor abdominal' },
+                    { val: 'slow_digestion', label: 'Digestión lenta' },
+                ]}
+            />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <RadioGroup
+                label="Relación con la comida"
+                name="foodRelationship"
+                options={[
+                    { val: 'neutral', label: 'Neutra' },
+                    { val: 'anxiety', label: 'Ansiedad por comer' },
+                    { val: 'emotional', label: 'Comer emocional' },
+                    { val: 'binge', label: 'Episodios de atracón' },
+                ]}
+            />
+
+            <div className="grid grid-cols-2 gap-4">
                 <div className={styles.formGroup}>
-                    <label className={styles.label}>Comidas diarias</label>
+                    <label className={styles.label}>Número de comidas diarias</label>
                     <input
                         type="number"
                         name="mealsPerDay"
                         className={styles.input}
-                        placeholder="3, 4, 5..."
+                        placeholder="Ej: 4"
                         value={data.mealsPerDay}
                         onChange={handleChange}
                     />
                 </div>
                 <div className={styles.formGroup}>
-                    <label className={styles.label}>Horas de sueño</label>
+                    <label className={styles.label}>Horas de sueño nocturno</label>
                     <input
                         type="text"
                         name="sleep"
                         className={styles.input}
-                        placeholder="Ej: 7 horas"
+                        placeholder="Ej: 7-8h"
                         value={data.sleep}
                         onChange={handleChange}
                     />
                 </div>
             </div>
 
+            <div className={styles.formGroup}>
+                <label className={styles.label}>Horarios aproximados de comidas</label>
+                <input
+                    type="text"
+                    name="mealTimes"
+                    className={styles.input}
+                    placeholder="Ej: 8:00, 13:00, 16:00, 21:00"
+                    value={data.mealTimes}
+                    onChange={handleChange}
+                />
+            </div>
+
             <RadioGroup
-                label="¿Tienes tiempo para cocinar?"
+                label="Calidad del sueño"
+                name="sleepQuality"
+                options={[
+                    { val: 'good', label: 'Buena' },
+                    { val: 'regular', label: 'Regular' },
+                    { val: 'bad', label: 'Mala' },
+                ]}
+            />
+
+            <div className={styles.formGroup}>
+                <label className={styles.label}>¿Tomas café o estimulantes?</label>
+                <div className="flex gap-4 mt-2 mb-2">
+                    {['yes', 'no'].map((val) => (
+                        <label key={val} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="coffee"
+                                value={val}
+                                checked={data.coffee === val}
+                                onChange={handleChange}
+                                className="w-5 h-5"
+                                style={{ accentColor: '#0056b3' }}
+                            />
+                            <span>{val === 'yes' ? 'Sí' : 'No'}</span>
+                        </label>
+                    ))}
+                </div>
+                <input
+                    type="text"
+                    name="coffeeDetails"
+                    className={styles.input}
+                    placeholder="Cuánto y a qué hora"
+                    value={data.coffeeDetails}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <RadioGroup
+                label="¿Tienes facilidad para cocinar?"
+                name="cookingSkill"
+                options={[
+                    { val: 'yes', label: 'Sí' },
+                    { val: 'no', label: 'No' },
+                    { val: 'depends', label: 'Depende del día' },
+                ]}
+            />
+
+            <RadioGroup
+                label="¿Cuánto tiempo puedes dedicar a preparar tus comidas?"
                 name="cookingTime"
                 options={[
-                    { val: 'high', label: 'Sí, cocino a diario' },
-                    { val: 'medium', label: 'Tengo poco tiempo (Meal Prep)' },
-                    { val: 'low', label: 'Casi nada (Compro hecho/Tupper)' }
+                    { val: 'less_15', label: '< 15 min' },
+                    { val: '15_30', label: '15-30 min' },
+                    { val: 'more_30', label: '> 30 min' },
                 ]}
             />
         </div>
